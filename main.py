@@ -61,38 +61,15 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     """
     # TODO: Implement function
     
-    ### model 1
-    # deconv1 = tf.layers.conv2d_transpose(vgg_layer7_out, 512, 4, (2,2), padding='same')
-    # conv4_1 = tf.layers.conv2d(vgg_layer4_out, 512, 1, 1, padding='same')
-    # skip1   = tf.add(deconv1, conv4_1)
-    # deconv2 = tf.layers.conv2d_transpose(skip1, 256, 4, (2,2), padding='same')
-    # conv3_1 = tf.layers.conv2d(vgg_layer3_out, 256, 1, 1, padding='same')
-    # skip2   = tf.add(deconv2, conv3_1)
-    # skip2_c = tf.layers.conv2d(skip2, 128, 1, 1, padding='same')
-    # output = tf.layers.conv2d_transpose(skip2_c, num_classes, 16, (8,8), padding='same')
-
-    ### model 2
-    conv7_1 = tf.layers.conv2d(vgg_layer7_out, 512, 1, 1, padding='same')
-    conv7_2 = tf.layers.conv2d_transpose(conv7_1, 512, 8, (4,4), padding='same')
-    conv4_1 = tf.layers.conv2d(vgg_layer4_out, 512, 1, 1, padding='same')
-    conv4_2 = tf.layers.conv2d_transpose(conv4_1, 512, 4, (2,2), padding='same')
-    conv3_1 = tf.layers.conv2d(vgg_layer3_out, 512, 1, 1, padding='same')
-    combine_1 = tf.add(conv7_2, conv4_2)
-    combine_1 = tf.add(combine_1, conv3_1)
-    combine_2 = tf.layers.conv2d(combine_1, 256, 1, 1, padding='same')
-    output = tf.layers.conv2d_transpose(combine_2, num_classes, 16, (8,8), padding='same')
-
     ### model 3
-    # conv7_1 = tf.layers.conv2d(vgg_layer7_out, 512, 1, 1, padding='same')
-    # conv7_2 = tf.layers.conv2d_transpose(conv7_1, 512, 4, (2,2), padding='same')
-    # conv4_1 = tf.layers.conv2d(vgg_layer4_out, 512, 1, 1, padding='same')
-    # skip_1  = tf.add(conv4_1, conv7_2)
-    # skip_1c = tf.layers.conv2d(skip_1, 512, 1, 1, padding='same')
-    # deconv  = tf.layers.conv2d_transpose(skip_1c, 512, 4, (2,2), padding='same')
-    # conv3_1 = tf.layers.conv2d(vgg_layer3_out, 512, 1, 1, padding='same')
-    # skip_2  = tf.add(deconv, conv3_1)
-    # skip_2c = tf.layers.conv2d(skip_2, 256, 1, 1, padding='same')
-    # output = tf.layers.conv2d_transpose(skip_2c, num_classes, 16, (8,8), padding='same')
+    conv7_1 = tf.layers.conv2d(vgg_layer7_out, 512, 1, 1, padding='same', kernel_initializer=tf.truncated_normal_initializer(stddev = 0.01))
+    conv7_2 = tf.layers.conv2d_transpose(conv7_1, 512, 4, (2,2), padding='same', kernel_initializer=tf.truncated_normal_initializer(stddev = 0.01))
+    conv4_1 = tf.layers.conv2d(vgg_layer4_out, 512, 1, 1, padding='same', kernel_initializer=tf.truncated_normal_initializer(stddev = 0.01))
+    skip_1  = tf.add(conv4_1, conv7_2)
+    deconv  = tf.layers.conv2d_transpose(skip_1, 512, 4, (2,2), padding='same', kernel_initializer=tf.truncated_normal_initializer(stddev = 0.01))
+    conv3_1 = tf.layers.conv2d(vgg_layer3_out, 512, 1, 1, padding='same', kernel_initializer=tf.truncated_normal_initializer(stddev = 0.01))
+    skip_2  = tf.add(deconv, conv3_1)
+    output = tf.layers.conv2d_transpose(skip_2, num_classes, 16, (8,8), padding='same', kernel_initializer=tf.truncated_normal_initializer(stddev = 0.01))
     
     return output
 tests.test_layers(layers)
