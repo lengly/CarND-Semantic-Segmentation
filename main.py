@@ -116,17 +116,12 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
         train_loss_total = 0.0
         n = 0
         for batch_x, batch_y in get_batches_fn(batch_size):
-            sess.run([train_op], \
+            _, train_loss = sess.run([train_op, cross_entropy_loss], \
                 feed_dict={ \
                     input_image: batch_x, \
                     correct_label: batch_y, \
                     keep_prob: KEEP_PROB, \
                     learning_rate: LERANING_RATE})
-            train_loss = sess.run(cross_entropy_loss, \
-                feed_dict={ \
-                    input_image: batch_x, \
-                    correct_label: batch_y, \
-                    keep_prob: 1})
             train_loss_total += train_loss * batch_x.shape[0]
             n += batch_x.shape[0]
         train_loss_total /= n
